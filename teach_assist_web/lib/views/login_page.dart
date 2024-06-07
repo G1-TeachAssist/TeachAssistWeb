@@ -73,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
                   buttonText: 'Entrar',
                   buttonFunction: (){
                     if(_formKey.currentState!.validate()){
-
+                      Navigator.of(context).pushNamed('/home');
                     }
                   }
                 )
