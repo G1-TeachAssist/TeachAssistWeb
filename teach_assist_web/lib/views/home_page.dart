@@ -11,18 +11,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-  final SidebarXController _sidebarXController = SidebarXController(selectedIndex: 0, extended: true);
+  final SidebarXController _sidebarXController =
+      SidebarXController(selectedIndex: 0, extended: true);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(
-        title: 'Teach Assist'
-      ),
+      appBar: appBar(title: 'Teach Assist'),
       body: Row(
         children: [
-          Sidebar(controller: _sidebarXController),
+          Sidebar(
+            controller: _sidebarXController,
+            currentPage: 'Home',
+          ),
         ],
       ),
     );
