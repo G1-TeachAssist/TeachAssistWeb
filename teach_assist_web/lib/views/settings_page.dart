@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'package:teach_assist_web/components/app_bar_component.dart';
+import 'package:teach_assist_web/components/main_button_component.dart';
 import 'package:teach_assist_web/components/page_title_panel_component.dart';
 import 'package:teach_assist_web/components/sidebar_component.dart';
+import 'package:teach_assist_web/views/forms/discipline_form_view.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -23,6 +25,12 @@ class _SettingsPageState extends State<SettingsPage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -64,6 +72,46 @@ class _SettingsPageState extends State<SettingsPage>
                       labelStyle: const TextStyle(fontSize: 18),
                     ),
                   ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    mainButton(
+                      buttonColor: const Color(0xFF44bd32),
+                      buttonText: '+ Adicionar',
+                      horizontalPadding: 30,
+                      buttonFunction: () {
+                        switch (_tabController.index) {
+                          case 0:
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return const FormDialog();
+                              },
+                            );
+                        }
+                        print(_tabController.index);
+                      },
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    mainButton(
+                      buttonColor: const Color(0xFFe84118),
+                      buttonText: '- Remover',
+                      horizontalPadding: 30,
+                      buttonFunction: () {},
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
                 ),
                 Expanded(
                   child: TabBarView(
