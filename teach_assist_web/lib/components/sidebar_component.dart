@@ -1,17 +1,21 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:sidebarx/sidebarx.dart';
 
 class Sidebar extends StatelessWidget {
   final SidebarXController controller;
+  final String currentPage;
 
-  const Sidebar({super.key, required this.controller});
+  const Sidebar({
+    super.key,
+    required this.controller,
+    required this.currentPage,
+  });
 
   @override
   Widget build(BuildContext context) {
     return SidebarX(
       controller: controller,
+      showToggleButton: false,
       theme: SidebarXTheme(
         margin: const EdgeInsets.all(10),
         decoration: BoxDecoration(
@@ -74,13 +78,21 @@ class Sidebar extends StatelessWidget {
       items: [
         SidebarXItem(
           icon: Icons.home,
-          label: 'Conta',
-          onTap: () {},
+          label: 'Home',
+          onTap: () {
+            if (currentPage != 'Home') {
+              Navigator.of(context).pushNamed('/home');
+            }
+          },
         ),
         SidebarXItem(
           icon: Icons.dashboard,
           label: 'Dashboard',
-          onTap: () {},
+          onTap: () {
+            if (currentPage != 'Dashboard') {
+              Navigator.of(context).pushNamed('/dashboard');
+            }
+          },
         ),
         SidebarXItem(
           icon: Icons.school_rounded,
@@ -90,7 +102,11 @@ class Sidebar extends StatelessWidget {
         SidebarXItem(
           icon: Icons.settings,
           label: 'Configurações',
-          onTap: () {},
+          onTap: () {
+            if (currentPage != 'Configurações') {
+              Navigator.of(context).pushNamed('/settings');
+            }
+          },
         )
       ],
     );

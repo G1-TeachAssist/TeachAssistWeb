@@ -23,7 +23,7 @@ class FormTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: MediaQuery.of(context).size.width * 0.3,
+        horizontal: MediaQuery.of(context).size.width * 0.35,
         vertical: 10,
       ),
       child: TextFormField(

@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:teach_assist_web/routes/personal_route.dart';
+import 'package:teach_assist_web/views/dashboard_view.dart';
 import 'package:teach_assist_web/views/home_page.dart';
 import 'package:teach_assist_web/views/login_page.dart';
+import 'package:teach_assist_web/views/settings_page.dart';
+import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
+import 'package:webview_flutter_web/webview_flutter_web.dart';
 
 void main() {
+  WebViewPlatform.instance = WebWebViewPlatform();
   runApp(const MyApp());
 }
 
@@ -21,7 +27,17 @@ class MyApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/login':(context) => const LoginPage(),
-        '/home':(context) => const HomePage(),
+      },
+      onGenerateRoute: (settings) {
+        switch(settings.name){
+          case '/home':
+            return NoAnimationPageRoute(page: const HomePage());
+          case '/dashboard':
+            return NoAnimationPageRoute(page: const DashboardPage());
+          case '/settings':
+            return NoAnimationPageRoute(page: const SettingsPage());         
+        }
+        return null;
       },
     );
   }
