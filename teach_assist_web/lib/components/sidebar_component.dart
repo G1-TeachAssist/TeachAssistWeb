@@ -15,6 +15,7 @@ class Sidebar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SidebarX(
       controller: controller,
+      showToggleButton: false,
       theme: SidebarXTheme(
         margin: const EdgeInsets.all(10),
         decoration: BoxDecoration(
@@ -101,7 +102,11 @@ class Sidebar extends StatelessWidget {
         SidebarXItem(
           icon: Icons.settings,
           label: 'Configurações',
-          onTap: () {},
+          onTap: () {
+            if (currentPage != 'Configurações') {
+              Navigator.of(context).pushNamed('/settings');
+            }
+          },
         )
       ],
     );
