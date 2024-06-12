@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/login':(context) => const LoginPage(),
+        '/settings':(context) => const SettingsPage()
       },
       onGenerateRoute: (settings) {
         switch(settings.name){

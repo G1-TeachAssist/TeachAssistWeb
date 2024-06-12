@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:teach_assist_web/components/form_text_field.dart';
+import 'package:teach_assist_web/components/text_button_component.dart';
+import 'package:teach_assist_web/controllers/discipline_controller.dart';
 
-class FormDialog extends StatefulWidget {
-  const FormDialog({super.key});
+class FormDisciplineDialog extends StatefulWidget {
+  final VoidCallback onFormSubmit;
+
+  const FormDisciplineDialog({super.key, required this.onFormSubmit});
 
   @override
-  FormDialogState createState() => FormDialogState();
+  FormDisciplineDialogState createState() => FormDisciplineDialogState();
 }
 
-class FormDialogState extends State<FormDialog> {
+class FormDisciplineDialogState extends State<FormDisciplineDialog> {
   final _formKey = GlobalKey<FormState>();
-  String _code = '';
-  String _name = '';
+  final TextEditingController _codeController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: const Color(0xFFf5f6fa),
-      title: const Text('Inserir Nova Disciplina'),
+      backgroundColor: Colors.white,
+      title: const Text('Cadastro de Disciplina'),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -25,29 +30,31 @@ class FormDialogState extends State<FormDialog> {
             children: <Widget>[
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7,
-                child: TextFormField(
-                  decoration: const InputDecoration(labelText: 'Código'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, insira seu nome';
+                child: FormTextField(
+                  labelText: 'Código',
+                  hintText: 'Código da disciplina',
+                  horizontalPadding: 0,
+                  textController: _codeController,
+                  inputType: TextInputType.text,
+                  inputValidator: (code) {
+                    if (code == null || code.isEmpty) {
+                      return "Por favor, preencha o código da disciplina";
                     }
                     return null;
                   },
-                  onSaved: (value) {
-                    _code = value!;
-                  },
                 ),
               ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Nome'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, insira seu e-mail';
-                  }
+              FormTextField(
+                labelText: 'Nome',
+                hintText: 'Nome da disciplina',
+                horizontalPadding: 0,
+                inputType: TextInputType.text,
+                textController: _nameController,
+                inputValidator: (name) {
+                  if (name == null || name.isEmpty) {
+                      return "Por favor, preencha o nome da disciplina";
+                    }
                   return null;
-                },
-                onSaved: (value) {
-                  _name = value!;
                 },
               ),
             ],
@@ -55,18 +62,20 @@ class FormDialogState extends State<FormDialog> {
         ),
       ),
       actions: <Widget>[
-        TextButton(
-          child: const Text('Cancelar'),
-          onPressed: () {
+        popupButton(
+          buttonColor: const Color(0xFFC9CBD2),
+          buttonText: 'Cancelar',
+          onPressed: (){
             Navigator.of(context).pop();
           },
         ),
-        TextButton(
-          child: const Text('Salvar'),
-          onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              _formKey.currentState!.save();
-              //print('Nome: $_code, E-mail: $_name');
+        popupButton(
+          buttonColor: const Color(0xFF44bd32),
+          buttonText: 'Salvar',
+          onPressed: (){
+            if(_formKey.currentState!.validate()){
+              DisciplineController.instance.addDiscipline(_codeController.text, _nameController.text);
+              widget.onFormSubmit();
               Navigator.of(context).pop();
             }
           },
@@ -75,4 +84,3 @@ class FormDialogState extends State<FormDialog> {
     );
   }
 }
-

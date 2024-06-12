@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'package:teach_assist_web/components/app_bar_component.dart';
 import 'package:teach_assist_web/components/main_button_component.dart';
 import 'package:teach_assist_web/components/page_title_panel_component.dart';
 import 'package:teach_assist_web/components/sidebar_component.dart';
+import 'package:teach_assist_web/controllers/discipline_controller.dart';
+import 'package:teach_assist_web/models/discipline.dart';
 import 'package:teach_assist_web/views/forms/discipline_form_view.dart';
+import 'package:teach_assist_web/views/forms/student_form_view.dart';
+import 'package:teach_assist_web/views/forms/teacher_form_view.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -20,17 +23,25 @@ class _SettingsPageState extends State<SettingsPage>
       SidebarXController(selectedIndex: 3, extended: true);
 
   late TabController _tabController;
+  late List<Discipline> _disciplines;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+    _disciplines = DisciplineController.instance.getDisciplines();
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  void _updateDisciplines(){
+    setState(() {
+      _disciplines = DisciplineController.instance.getDisciplines();
+    });
   }
 
   @override
@@ -60,7 +71,7 @@ class _SettingsPageState extends State<SettingsPage>
                   children: [
                     TabBar(
                       controller: _tabController,
-                      padding: const EdgeInsets.only(top: 15, bottom: 15),
+                      padding: const EdgeInsets.only(top: 15),
                       tabs: const [
                         Tab(text: 'Disciplina'),
                         Tab(text: 'Aluno'),
@@ -82,18 +93,34 @@ class _SettingsPageState extends State<SettingsPage>
                     mainButton(
                       buttonColor: const Color(0xFF44bd32),
                       buttonText: '+ Adicionar',
-                      horizontalPadding: 30,
+                      horizontalPadding: 15,
+                      verticalPadding: 15,
                       buttonFunction: () {
                         switch (_tabController.index) {
                           case 0:
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
-                                return const FormDialog();
+                                return FormDisciplineDialog(
+                                  onFormSubmit: _updateDisciplines,
+                                );
+                              },
+                            );
+                          case 1:
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return const FormStudentDialog();
+                              },
+                            );
+                          case 2:
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return const FormTeacherDialog();
                               },
                             );
                         }
-                        print(_tabController.index);
                       },
                     ),
                     const SizedBox(
@@ -102,7 +129,8 @@ class _SettingsPageState extends State<SettingsPage>
                     mainButton(
                       buttonColor: const Color(0xFFe84118),
                       buttonText: '- Remover',
-                      horizontalPadding: 30,
+                      horizontalPadding: 15,
+                      verticalPadding: 15,
                       buttonFunction: () {},
                     ),
                     const SizedBox(
@@ -131,22 +159,13 @@ class _SettingsPageState extends State<SettingsPage>
                             DataColumn(label: Text('Código')),
                             DataColumn(label: Text('Nome'))
                           ],
-                          rows: const [
-                            DataRow(
-                              cells: [
-                                DataCell(Text('1')),
-                                DataCell(Text('BIO01')),
-                                DataCell(Text('Biologia')),
-                              ],
-                            ),
-                            DataRow(
-                              cells: [
-                                DataCell(Text('2')),
-                                DataCell(Text('MAT01')),
-                                DataCell(Text('Matemática')),
-                              ],
-                            ),
-                          ],
+                          rows: _disciplines.map((discipline){
+                            return DataRow(cells: [
+                              DataCell(Text(discipline.id.toString())),
+                              DataCell(Text(discipline.code)),
+                              DataCell(Text(discipline.name)),
+                            ]);
+                          }).toList(),
                         ),
                       ),
                       SingleChildScrollView(

@@ -4,6 +4,7 @@ ElevatedButton mainButton(
     {String buttonText = '',
     Color buttonColor = const Color(0xFF40739e),
     double horizontalPadding = 60,
+    double verticalPadding = 20,
     Function()? buttonFunction}) {
   return ElevatedButton(
     onPressed: buttonFunction,
@@ -12,7 +13,7 @@ ElevatedButton mainButton(
         padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
           EdgeInsets.symmetric(
             horizontal: horizontalPadding,
-            vertical: 20,
+            vertical: verticalPadding,
           ),
         ),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(

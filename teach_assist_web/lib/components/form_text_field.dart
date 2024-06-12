@@ -8,6 +8,7 @@ class FormTextField extends StatelessWidget {
   final TextInputType? inputType;
   final String? Function(String?)? inputValidator;
   final Icon? iconInput;
+  final double? horizontalPadding;
 
   const FormTextField(
       {super.key,
@@ -17,13 +18,14 @@ class FormTextField extends StatelessWidget {
       this.obscureText,
       this.inputType,
       this.inputValidator,
-      this.iconInput});
+      this.iconInput,
+      this.horizontalPadding});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: MediaQuery.of(context).size.width * 0.35,
+        horizontal: horizontalPadding ?? MediaQuery.of(context).size.width * 0.35,
         vertical: 10,
       ),
       child: TextFormField(
