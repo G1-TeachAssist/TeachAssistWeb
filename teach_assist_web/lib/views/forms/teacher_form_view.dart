@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:teach_assist_web/components/form_text_field.dart';
 import 'package:teach_assist_web/components/text_button_component.dart';
+import 'package:teach_assist_web/controllers/teacher_controller.dart';
 
 class FormTeacherDialog extends StatefulWidget {
-  const FormTeacherDialog({super.key});
+  final VoidCallback onFormSubmit;
+  const FormTeacherDialog({super.key, required this.onFormSubmit});
 
   @override
   FormTeacherDialogState createState() => FormTeacherDialogState();
@@ -18,6 +20,7 @@ class FormTeacherDialogState extends State<FormTeacherDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: Colors.white,
+      surfaceTintColor: Colors.white,
       title: const Text('Cadastro de Professor'),
       content: SingleChildScrollView(
         child: Form(
@@ -70,7 +73,11 @@ class FormTeacherDialogState extends State<FormTeacherDialog> {
           buttonColor: const Color(0xFF44bd32),
           buttonText: 'Salvar',
           onPressed: () {
-            if (_formKey.currentState!.validate()) {}
+            if (_formKey.currentState!.validate()) {
+              TeacherController.instance.addTeacher(_nameController.text, _emailController.text);
+              widget.onFormSubmit();
+              Navigator.of(context).pop();
+            }
           },
         )
       ],

@@ -5,7 +5,12 @@ import 'package:teach_assist_web/components/main_button_component.dart';
 import 'package:teach_assist_web/components/page_title_panel_component.dart';
 import 'package:teach_assist_web/components/sidebar_component.dart';
 import 'package:teach_assist_web/controllers/discipline_controller.dart';
+import 'package:teach_assist_web/controllers/student_controller.dart';
+import 'package:teach_assist_web/controllers/teacher_controller.dart';
 import 'package:teach_assist_web/models/discipline.dart';
+import 'package:teach_assist_web/models/student.dart';
+import 'package:teach_assist_web/models/teacher.dart';
+import 'package:teach_assist_web/views/forms/class_form_view.dart';
 import 'package:teach_assist_web/views/forms/discipline_form_view.dart';
 import 'package:teach_assist_web/views/forms/student_form_view.dart';
 import 'package:teach_assist_web/views/forms/teacher_form_view.dart';
@@ -24,12 +29,16 @@ class _SettingsPageState extends State<SettingsPage>
 
   late TabController _tabController;
   late List<Discipline> _disciplines;
+  late List<Teacher> _teachers;
+  late List<Student> _students;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
     _disciplines = DisciplineController.instance.getDisciplines();
+    _teachers = TeacherController.instance.getTeachers();
+    _students = StudentController.instance.getStudents();
   }
 
   @override
@@ -38,9 +47,21 @@ class _SettingsPageState extends State<SettingsPage>
     super.dispose();
   }
 
-  void _updateDisciplines(){
+  void _updateDisciplines() {
     setState(() {
       _disciplines = DisciplineController.instance.getDisciplines();
+    });
+  }
+
+  void _updateTeachers() {
+    setState(() {
+      _teachers = TeacherController.instance.getTeachers();
+    });
+  }
+
+  void _updateStudents(){
+    setState(() {
+      _students = StudentController.instance.getStudents();
     });
   }
 
@@ -110,14 +131,25 @@ class _SettingsPageState extends State<SettingsPage>
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
-                                return const FormStudentDialog();
+                                return FormStudentDialog(
+                                  onFormSubmit: _updateStudents,
+                                );
                               },
                             );
                           case 2:
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
-                                return const FormTeacherDialog();
+                                return FormTeacherDialog(
+                                  onFormSubmit: _updateTeachers,
+                                );
+                              },
+                            );
+                          case 3:
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return const FormClassDialog();
                               },
                             );
                         }
@@ -159,7 +191,7 @@ class _SettingsPageState extends State<SettingsPage>
                             DataColumn(label: Text('Código')),
                             DataColumn(label: Text('Nome'))
                           ],
-                          rows: _disciplines.map((discipline){
+                          rows: _disciplines.map((discipline) {
                             return DataRow(cells: [
                               DataCell(Text(discipline.id.toString())),
                               DataCell(Text(discipline.code)),
@@ -181,20 +213,12 @@ class _SettingsPageState extends State<SettingsPage>
                             DataColumn(label: Text('ID')),
                             DataColumn(label: Text('Nome'))
                           ],
-                          rows: const [
-                            DataRow(
-                              cells: [
-                                DataCell(Text('1')),
-                                DataCell(Text('John Lee')),
-                              ],
-                            ),
-                            DataRow(
-                              cells: [
-                                DataCell(Text('2')),
-                                DataCell(Text('Barbara Rodriguez')),
-                              ],
-                            ),
-                          ],
+                          rows: _students.map((student) {
+                            return DataRow(cells: [
+                              DataCell(Text(student.id.toString())),
+                              DataCell(Text(student.name)),
+                            ]);
+                          }).toList(),
                         ),
                       ),
                       SingleChildScrollView(
@@ -211,22 +235,13 @@ class _SettingsPageState extends State<SettingsPage>
                             DataColumn(label: Text('Nome')),
                             DataColumn(label: Text('E-mail'))
                           ],
-                          rows: const [
-                            DataRow(
-                              cells: [
-                                DataCell(Text('1')),
-                                DataCell(Text('Olivia Alves')),
-                                DataCell(Text('olivia.alves@email.com')),
-                              ],
-                            ),
-                            DataRow(
-                              cells: [
-                                DataCell(Text('2')),
-                                DataCell(Text('Denis Moreira')),
-                                DataCell(Text('denis.moreira@email.com')),
-                              ],
-                            ),
-                          ],
+                          rows: _teachers.map((teacher) {
+                            return DataRow(cells: [
+                              DataCell(Text(teacher.id.toString())),
+                              DataCell(Text(teacher.name)),
+                              DataCell(Text(teacher.email)),
+                            ]);
+                          }).toList(),
                         ),
                       ),
                       SingleChildScrollView(

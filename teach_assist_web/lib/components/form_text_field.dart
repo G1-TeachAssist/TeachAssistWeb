@@ -9,6 +9,7 @@ class FormTextField extends StatelessWidget {
   final String? Function(String?)? inputValidator;
   final Icon? iconInput;
   final double? horizontalPadding;
+  final void Function()? onTap;
 
   const FormTextField(
       {super.key,
@@ -19,7 +20,8 @@ class FormTextField extends StatelessWidget {
       this.inputType,
       this.inputValidator,
       this.iconInput,
-      this.horizontalPadding});
+      this.horizontalPadding,
+      this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +32,7 @@ class FormTextField extends StatelessWidget {
       ),
       child: TextFormField(
         controller: textController,
+        onTap: onTap,
         keyboardType: inputType,
         decoration: InputDecoration(
           prefixIcon: iconInput,

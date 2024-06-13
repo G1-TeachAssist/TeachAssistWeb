@@ -16,8 +16,5 @@ class DisciplineController {
   void addDiscipline(String code, String name) {
     Discipline discipline = Discipline(id: 53, code: code, name: name);
     getDisciplines().add(discipline);
-    for (Discipline discipline in getDisciplines()) {
-      print(discipline.name);
-    }
   }
 }

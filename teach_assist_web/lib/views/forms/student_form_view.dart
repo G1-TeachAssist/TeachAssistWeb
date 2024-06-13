@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:teach_assist_web/components/form_text_field.dart';
 import 'package:teach_assist_web/components/text_button_component.dart';
+import 'package:teach_assist_web/controllers/student_controller.dart';
 
 class FormStudentDialog extends StatefulWidget {
-  const FormStudentDialog({super.key});
+  final VoidCallback onFormSubmit;
+
+  const FormStudentDialog({super.key, required this.onFormSubmit});
 
   @override
   FormStudentDialogState createState() => FormStudentDialogState();
@@ -17,6 +20,7 @@ class FormStudentDialogState extends State<FormStudentDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: Colors.white,
+      surfaceTintColor: Colors.white,
       title: const Text('Cadastro de Aluno'),
       content: SingleChildScrollView(
         child: Form(
@@ -56,7 +60,11 @@ class FormStudentDialogState extends State<FormStudentDialog> {
           buttonColor: const Color(0xFF44bd32),
           buttonText: 'Salvar',
           onPressed: () {
-            if (_formKey.currentState!.validate()) {}
+            if (_formKey.currentState!.validate()) {
+              StudentController.instance.addStudent(_nameController.text);
+              widget.onFormSubmit();
+              Navigator.of(context).pop();
+            }
           },
         )
       ],

@@ -21,6 +21,7 @@ class FormDisciplineDialogState extends State<FormDisciplineDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: Colors.white,
+      surfaceTintColor: Colors.white,
       title: const Text('Cadastro de Disciplina'),
       content: SingleChildScrollView(
         child: Form(
