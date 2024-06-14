@@ -97,7 +97,11 @@ class Sidebar extends StatelessWidget {
         SidebarXItem(
           icon: Icons.school_rounded,
           label: 'Dados',
-          onTap: () {},
+          onTap: () {
+            if (currentPage != 'Dados') {
+              Navigator.of(context).pushNamed('/data');
+            }
+          },
         ),
         SidebarXItem(
           icon: Icons.settings,

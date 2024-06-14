@@ -4,12 +4,15 @@ import 'package:teach_assist_web/components/app_bar_component.dart';
 import 'package:teach_assist_web/components/main_button_component.dart';
 import 'package:teach_assist_web/components/page_title_panel_component.dart';
 import 'package:teach_assist_web/components/sidebar_component.dart';
+import 'package:teach_assist_web/controllers/class_controller.dart';
 import 'package:teach_assist_web/controllers/discipline_controller.dart';
 import 'package:teach_assist_web/controllers/student_controller.dart';
 import 'package:teach_assist_web/controllers/teacher_controller.dart';
+import 'package:teach_assist_web/models/class.dart';
 import 'package:teach_assist_web/models/discipline.dart';
 import 'package:teach_assist_web/models/student.dart';
 import 'package:teach_assist_web/models/teacher.dart';
+import 'package:teach_assist_web/utils/services.dart';
 import 'package:teach_assist_web/views/forms/class_form_view.dart';
 import 'package:teach_assist_web/views/forms/discipline_form_view.dart';
 import 'package:teach_assist_web/views/forms/student_form_view.dart';
@@ -31,6 +34,7 @@ class _SettingsPageState extends State<SettingsPage>
   late List<Discipline> _disciplines;
   late List<Teacher> _teachers;
   late List<Student> _students;
+  late List<Class> _classes;
 
   @override
   void initState() {
@@ -39,6 +43,7 @@ class _SettingsPageState extends State<SettingsPage>
     _disciplines = DisciplineController.instance.getDisciplines();
     _teachers = TeacherController.instance.getTeachers();
     _students = StudentController.instance.getStudents();
+    _classes = ClassController.instance.getClasses();
   }
 
   @override
@@ -62,6 +67,12 @@ class _SettingsPageState extends State<SettingsPage>
   void _updateStudents(){
     setState(() {
       _students = StudentController.instance.getStudents();
+    });
+  }
+
+  void _updateClasses(){
+    setState(() {
+      _classes = ClassController.instance.getClasses();
     });
   }
 
@@ -149,7 +160,9 @@ class _SettingsPageState extends State<SettingsPage>
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
-                                return const FormClassDialog();
+                                return FormClassDialog(
+                                  onFormSubmit: _updateClasses,
+                                );
                               },
                             );
                         }
@@ -262,30 +275,17 @@ class _SettingsPageState extends State<SettingsPage>
                             DataColumn(label: Text('Status')),
                             DataColumn(label: Text('Média Final Mínima'))
                           ],
-                          rows: const [
-                            DataRow(
-                              cells: [
-                                DataCell(Text('2024001')),
-                                DataCell(Text('Olivia Alves')),
-                                DataCell(Text('Biologia')),
-                                DataCell(Text('02/02/2024')),
-                                DataCell(Text('Semestral')),
-                                DataCell(Text('Em andamento')),
-                                DataCell(Text('70.0')),
-                              ],
-                            ),
-                            DataRow(
-                              cells: [
-                                DataCell(Text('2024001')),
-                                DataCell(Text('Olivia Alves')),
-                                DataCell(Text('Biologia')),
-                                DataCell(Text('02/02/2024')),
-                                DataCell(Text('Semestral')),
-                                DataCell(Text('Em andamento')),
-                                DataCell(Text('70.0')),
-                              ],
-                            ),
-                          ],
+                          rows: _classes.map((classe){
+                            return DataRow(cells: [
+                              DataCell(Text(classe.id.toString())),
+                              DataCell(Text(classe.teacher.name)),
+                              DataCell(Text(classe.discipline.name)),
+                              DataCell(Text(Services.instance.convertDateToString(classe.startAt))),
+                              DataCell(Text(classe.type)),
+                              DataCell(Text(classe.status)),
+                              DataCell(Text(classe.minFinalMedia.toStringAsFixed(1))),
+                            ]);
+                          }).toList(),
                         ),
                       ),
                     ],

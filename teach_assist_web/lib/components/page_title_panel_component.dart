@@ -4,7 +4,7 @@ Container titlePanel({required BuildContext context, required String title}) {
   return Container(
     height: 150,
     width: MediaQuery.sizeOf(context).width - 221,
-    margin: const EdgeInsets.only(top: 1),
+    margin: const EdgeInsets.only(top: 10),
     padding: const EdgeInsets.only(top: 25),
     decoration: const BoxDecoration(
       borderRadius: BorderRadius.all(Radius.circular(10)),

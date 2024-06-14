@@ -9,6 +9,7 @@ class Class {
   final List<Student> students;
   final DateTime startAt;
   final String type;
+  final String status;
   final double minFinalMedia;
 
   Class({
@@ -18,6 +19,7 @@ class Class {
     required this.students,
     required this.startAt,
     required this.type,
+    required this.status,
     required this.minFinalMedia,
   });
 }
