@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login':(context) => const LoginPage(),
         //'/settings':(context) => const SettingsPage()
-        '/data':(context) => const DataPage()
+        //'/data':(context) => const DataPage()
       },
       onGenerateRoute: (settings) {
         switch(settings.name){

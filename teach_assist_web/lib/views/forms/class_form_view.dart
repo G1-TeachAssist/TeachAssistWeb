@@ -228,6 +228,7 @@ class FormClassDialogState extends State<FormClassDialog> {
                 teacher: _selectedTeacher!,
                 discipline: _selectedDiscipline!,
                 students: [],
+                grades: [],
                 startAt: _selectedDate!,
                 type: _selectedType!,
                 status: _selectedStatus!,

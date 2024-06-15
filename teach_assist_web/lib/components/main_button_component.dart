@@ -5,6 +5,7 @@ ElevatedButton mainButton(
     Color buttonColor = const Color(0xFF40739e),
     double horizontalPadding = 60,
     double verticalPadding = 20,
+    double fontSize = 20,
     Function()? buttonFunction}) {
   return ElevatedButton(
     onPressed: buttonFunction,
@@ -22,8 +23,8 @@ ElevatedButton mainButton(
         ))),
     child: Text(
       buttonText,
-      style: const TextStyle(
-        fontSize: 20,
+      style: TextStyle(
+        fontSize: fontSize,
         color: Colors.white,
       ),
     ),
