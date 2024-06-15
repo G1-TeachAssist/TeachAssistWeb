@@ -1,9 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'package:teach_assist_web/components/app_bar_component.dart';
+import 'package:teach_assist_web/components/main_button_component.dart';
 import 'package:teach_assist_web/components/page_title_panel_component.dart';
 import 'package:teach_assist_web/components/sidebar_component.dart';
+import 'package:teach_assist_web/controllers/class_controller.dart';
+import 'package:teach_assist_web/controllers/discipline_controller.dart';
+import 'package:teach_assist_web/controllers/student_controller.dart';
+import 'package:teach_assist_web/controllers/teacher_controller.dart';
+import 'package:teach_assist_web/models/class.dart';
+import 'package:teach_assist_web/models/discipline.dart';
+import 'package:teach_assist_web/models/student.dart';
+import 'package:teach_assist_web/models/teacher.dart';
+import 'package:teach_assist_web/utils/services.dart';
+import 'package:teach_assist_web/views/forms/class_form_view.dart';
+import 'package:teach_assist_web/views/forms/discipline_form_view.dart';
+import 'package:teach_assist_web/views/forms/student_form_view.dart';
+import 'package:teach_assist_web/views/forms/teacher_form_view.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -18,11 +31,49 @@ class _SettingsPageState extends State<SettingsPage>
       SidebarXController(selectedIndex: 3, extended: true);
 
   late TabController _tabController;
+  late List<Discipline> _disciplines;
+  late List<Teacher> _teachers;
+  late List<Student> _students;
+  late List<Class> _classes;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+    _disciplines = DisciplineController.instance.getDisciplines();
+    _teachers = TeacherController.instance.getTeachers();
+    _students = StudentController.instance.getStudents();
+    _classes = ClassController.instance.getClasses();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  void _updateDisciplines() {
+    setState(() {
+      _disciplines = DisciplineController.instance.getDisciplines();
+    });
+  }
+
+  void _updateTeachers() {
+    setState(() {
+      _teachers = TeacherController.instance.getTeachers();
+    });
+  }
+
+  void _updateStudents(){
+    setState(() {
+      _students = StudentController.instance.getStudents();
+    });
+  }
+
+  void _updateClasses(){
+    setState(() {
+      _classes = ClassController.instance.getClasses();
+    });
   }
 
   @override
@@ -52,7 +103,7 @@ class _SettingsPageState extends State<SettingsPage>
                   children: [
                     TabBar(
                       controller: _tabController,
-                      padding: const EdgeInsets.only(top: 15, bottom: 15),
+                      padding: const EdgeInsets.only(top: 15),
                       tabs: const [
                         Tab(text: 'Disciplina'),
                         Tab(text: 'Aluno'),
@@ -64,6 +115,76 @@ class _SettingsPageState extends State<SettingsPage>
                       labelStyle: const TextStyle(fontSize: 18),
                     ),
                   ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    mainButton(
+                      buttonColor: const Color(0xFF44bd32),
+                      buttonText: '+ Adicionar',
+                      horizontalPadding: 15,
+                      verticalPadding: 15,
+                      buttonFunction: () {
+                        switch (_tabController.index) {
+                          case 0:
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return FormDisciplineDialog(
+                                  onFormSubmit: _updateDisciplines,
+                                );
+                              },
+                            );
+                          case 1:
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return FormStudentDialog(
+                                  onFormSubmit: _updateStudents,
+                                );
+                              },
+                            );
+                          case 2:
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return FormTeacherDialog(
+                                  onFormSubmit: _updateTeachers,
+                                );
+                              },
+                            );
+                          case 3:
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return FormClassDialog(
+                                  onFormSubmit: _updateClasses,
+                                );
+                              },
+                            );
+                        }
+                      },
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    mainButton(
+                      buttonColor: const Color(0xFFe84118),
+                      buttonText: '- Remover',
+                      horizontalPadding: 15,
+                      verticalPadding: 15,
+                      buttonFunction: () {},
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
                 ),
                 Expanded(
                   child: TabBarView(
@@ -83,22 +204,13 @@ class _SettingsPageState extends State<SettingsPage>
                             DataColumn(label: Text('Código')),
                             DataColumn(label: Text('Nome'))
                           ],
-                          rows: const [
-                            DataRow(
-                              cells: [
-                                DataCell(Text('1')),
-                                DataCell(Text('BIO01')),
-                                DataCell(Text('Biologia')),
-                              ],
-                            ),
-                            DataRow(
-                              cells: [
-                                DataCell(Text('2')),
-                                DataCell(Text('MAT01')),
-                                DataCell(Text('Matemática')),
-                              ],
-                            ),
-                          ],
+                          rows: _disciplines.map((discipline) {
+                            return DataRow(cells: [
+                              DataCell(Text(discipline.id.toString())),
+                              DataCell(Text(discipline.code)),
+                              DataCell(Text(discipline.name)),
+                            ]);
+                          }).toList(),
                         ),
                       ),
                       SingleChildScrollView(
@@ -114,20 +226,12 @@ class _SettingsPageState extends State<SettingsPage>
                             DataColumn(label: Text('ID')),
                             DataColumn(label: Text('Nome'))
                           ],
-                          rows: const [
-                            DataRow(
-                              cells: [
-                                DataCell(Text('1')),
-                                DataCell(Text('John Lee')),
-                              ],
-                            ),
-                            DataRow(
-                              cells: [
-                                DataCell(Text('2')),
-                                DataCell(Text('Barbara Rodriguez')),
-                              ],
-                            ),
-                          ],
+                          rows: _students.map((student) {
+                            return DataRow(cells: [
+                              DataCell(Text(student.id.toString())),
+                              DataCell(Text(student.name)),
+                            ]);
+                          }).toList(),
                         ),
                       ),
                       SingleChildScrollView(
@@ -144,22 +248,13 @@ class _SettingsPageState extends State<SettingsPage>
                             DataColumn(label: Text('Nome')),
                             DataColumn(label: Text('E-mail'))
                           ],
-                          rows: const [
-                            DataRow(
-                              cells: [
-                                DataCell(Text('1')),
-                                DataCell(Text('Olivia Alves')),
-                                DataCell(Text('olivia.alves@email.com')),
-                              ],
-                            ),
-                            DataRow(
-                              cells: [
-                                DataCell(Text('2')),
-                                DataCell(Text('Denis Moreira')),
-                                DataCell(Text('denis.moreira@email.com')),
-                              ],
-                            ),
-                          ],
+                          rows: _teachers.map((teacher) {
+                            return DataRow(cells: [
+                              DataCell(Text(teacher.id.toString())),
+                              DataCell(Text(teacher.name)),
+                              DataCell(Text(teacher.email)),
+                            ]);
+                          }).toList(),
                         ),
                       ),
                       SingleChildScrollView(
@@ -180,30 +275,17 @@ class _SettingsPageState extends State<SettingsPage>
                             DataColumn(label: Text('Status')),
                             DataColumn(label: Text('Média Final Mínima'))
                           ],
-                          rows: const [
-                            DataRow(
-                              cells: [
-                                DataCell(Text('2024001')),
-                                DataCell(Text('Olivia Alves')),
-                                DataCell(Text('Biologia')),
-                                DataCell(Text('02/02/2024')),
-                                DataCell(Text('Semestral')),
-                                DataCell(Text('Em andamento')),
-                                DataCell(Text('70.0')),
-                              ],
-                            ),
-                            DataRow(
-                              cells: [
-                                DataCell(Text('2024001')),
-                                DataCell(Text('Olivia Alves')),
-                                DataCell(Text('Biologia')),
-                                DataCell(Text('02/02/2024')),
-                                DataCell(Text('Semestral')),
-                                DataCell(Text('Em andamento')),
-                                DataCell(Text('70.0')),
-                              ],
-                            ),
-                          ],
+                          rows: _classes.map((classe){
+                            return DataRow(cells: [
+                              DataCell(Text(classe.id.toString())),
+                              DataCell(Text(classe.teacher.name)),
+                              DataCell(Text(classe.discipline.name)),
+                              DataCell(Text(Services.instance.convertDateToString(classe.startAt))),
+                              DataCell(Text(classe.type)),
+                              DataCell(Text(classe.status)),
+                              DataCell(Text(classe.minFinalMedia.toStringAsFixed(1))),
+                            ]);
+                          }).toList(),
                         ),
                       ),
                     ],

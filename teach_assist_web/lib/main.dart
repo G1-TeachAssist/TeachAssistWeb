@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:teach_assist_web/routes/personal_route.dart';
 import 'package:teach_assist_web/views/dashboard_view.dart';
+import 'package:teach_assist_web/views/data_page.dart';
 import 'package:teach_assist_web/views/home_page.dart';
 import 'package:teach_assist_web/views/login_page.dart';
 import 'package:teach_assist_web/views/settings_page.dart';
@@ -27,6 +28,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/login':(context) => const LoginPage(),
+        //'/settings':(context) => const SettingsPage()
+        //'/data':(context) => const DataPage()
       },
       onGenerateRoute: (settings) {
         switch(settings.name){
@@ -34,6 +37,8 @@ class MyApp extends StatelessWidget {
             return NoAnimationPageRoute(page: const HomePage());
           case '/dashboard':
             return NoAnimationPageRoute(page: const DashboardPage());
+          case '/data':
+            return NoAnimationPageRoute(page: const DataPage());
           case '/settings':
             return NoAnimationPageRoute(page: const SettingsPage());         
         }
